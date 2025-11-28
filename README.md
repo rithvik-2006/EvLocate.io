@@ -1,36 +1,147 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
 
-First, run the development server:
+# ⚡ EV Locator — Find Nearby EV Charging Stations
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+EV Locator is a web application that helps electric-vehicle users find the **nearest charging stations in real time**.
+The app detects the user's current location, fetches nearby EV charging points using the **Open Charge Map API**, and displays them on an interactive map.
+
+🚗 Built for EV users who want a **quick, intuitive and map-based interface** instead of navigating multiple apps.
+
+---
+
+## 🚀 Features
+
+| Feature                                                                    | Status |
+| -------------------------------------------------------------------------- | ------ |
+| Detect user location using geolocation                                     | ✔️     |
+| Show nearby charging stations on map                                       | ✔️     |
+| Show user's current location marker                                        | ✔️     |
+| Highlight the nearest charging station                                     | ✔️     |
+| Display station details (address, distance, connectors, cost if available) | ✔️     |
+| Fully responsive UI                                                        | ✔️     |
+| Modern Leaflet + OpenStreetMap map                                         | ✔️     |
+| Designed for multi-country usage                                           | ✔️     |
+| Filters & rating support                                                   | 🔜     |
+| Routing directions to charging point                                       | 🔜     |
+| User accounts & favorite stations                                          | 🔜     |
+
+---
+
+## 🧠 Tech Stack
+
+| Tech                        | Purpose                       |
+| --------------------------- | ----------------------------- |
+| **Next.js** (App Router)    | Frontend & backend API routes |
+| **React-Leaflet + Leaflet** | Interactive map               |
+| **Open Charge Map API**     | EV station data               |
+| **Geolocation API**         | Detect user coordinates       |
+| **TypeScript (optional)**   | Type-safe improvements        |
+| **Vercel**                  | Hosting (recommended)         |
+
+---
+
+## 📸 Screenshot (add later)
+
+```
+[ Add screenshots of landing page & map view here ]
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🗺️ How It Works
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Browser asks permission to access user location
+2. App calls `/api/stations?lat=…&lon=…`
+3. Backend hits the **Open Charge Map API**
+4. Results are processed, sorted by distance, and rendered on the map
+5. The nearest charging station gets a **special highlighted marker**
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🔧 Environment Variables
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Create a `.env.local` file in the root:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+OCM_API_KEY=your_open_charge_map_api_key
+```
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## ▶️ Getting Started
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+git clone https://github.com/yourname/yourrepo.git
+cd yourrepo
+npm install
+npm run dev
+```
+
+Visit:
+
+```
+http://localhost:3000
+```
+
+---
+
+## 🔗 API Used
+
+**Open Charge Map API**
+[https://openchargemap.org/site/develop/api](https://openchargemap.org/site/develop/api)
+
+The project strictly follows their usage requirements and licensing terms.
+
+---
+
+## 🗂️ Folder Structure
+
+```
+📦 project-root
+ ┣ 📁 app
+ ┃ ┣ 📁 charge-map      → Map page
+ ┃ ┣ 📁 api/stations    → Backend route for OCM API
+ ┃ ┣ layout.tsx         → Global navbar layout
+ ┃ ┗ page.tsx           → Landing page
+ ┣ 📁 components
+ ┃ ┗ Navbar.tsx         → Navigation bar
+ ┣ 📁 public
+ ┣ package.json
+ ┣ .env.local (ignored)
+```
+
+---
+
+## 💡 Future Enhancements (Ideas)
+
+* Filters → cost / connector type / fast charging only
+* Live charger availability (TomTom API / ChargeZone API if available)
+* User profiles + saved chargers
+* Offline cache for last-searched region
+* Mobile PWA mode for quick launch
+
+---
+
+## 🤝 Contributing
+
+PRs are welcome.
+If you’d like to improve station coverage, you can contribute new charger locations directly to the **Open Charge Map project** — the entire EV community benefits ❤️
+
+---
+
+## 📜 License
+
+This project is released under the **MIT License**.
+EV charging data © *Open Charge Map* (See their licensing & usage guidelines).
+
+---
+
+## ⭐ Support the Project
+
+If you like this project:
+
+```
+⭐ Star the repo — it motivates me!
+```
+
+
