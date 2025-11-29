@@ -3,123 +3,124 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import { FiMenu, FiX } from "react-icons/fi";
 
 export default function Navbar() {
   const [user, setUser] = useState<any>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user);
-    });
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
 
-    // Listen to login/logout changes
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) =>
+      setUser(session?.user ?? null)
+    );
 
-    return () => {
-      listener.subscription.unsubscribe();
-    };
+    return () => listener.subscription.unsubscribe();
   }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setUser(null);
-    window.location.href = "/"; // redirect home
+    window.location.href = "/";
   };
 
-  return (
-    <nav
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "12px 22px",
-        background: "#000000",
-        color: "white",
-        position: "sticky",
-        top: 0,
-        zIndex: 1000,
-      }}
-    >
-      {/* Left — Logo */}
-      <Link
-        href="/"
-        style={{
-          color: "white",
-          fontSize: "20px",
-          fontWeight: 600,
-          textDecoration: "none",
-        }}
-      >
-        ⚡ EV Locate
+  const NavLinks = () => (
+    <>
+      <Link href="/" className="hover:text-emerald-400 transition">
+        Home
       </Link>
+      <a
+        href="https://github.com/yourname/yourrepo"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="hover:text-emerald-400 transition"
+      >
+        Repo
+      </a>
+    </>
+  );
 
-      {/* Center — Navigation Links */}
-      <div style={{ display: "flex", gap: "20px", fontSize: "16px" }}>
-        <Link href="/" style={{ color: "white", textDecoration: "none" }}>
-          Home
+  const AuthLinks = () => (
+    <>
+      {!user && (
+        <Link href="/login" className="hover:text-emerald-400 transition">
+          Login
         </Link>
-        <a
-          href="https://github.com/yourname/yourrepo"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: "white", textDecoration: "none" }}
+      )}
+
+      {user && (
+        <div className="flex items-center gap-3">
+          {user.user_metadata?.avatar_url && (
+            <img
+              src={user.user_metadata.avatar_url}
+              alt="profile"
+              className="w-9 h-9 rounded-full border border-white"
+            />
+          )}
+
+          <span className="hidden sm:block text-sm text-zinc-300">
+            {user.user_metadata?.full_name || user.email}
+          </span>
+
+          <button
+            onClick={handleLogout}
+            className="border border-white rounded-full px-3 py-1 text-sm hover:bg-white hover:text-black transition"
+          >
+            Logout
+          </button>
+        </div>
+      )}
+    </>
+  );
+
+  return (
+    <>
+      {/* Navbar */}
+      <nav className="flex justify-between items-center px-6 py-3 bg-black text-white sticky top-0 z-50">
+        {/* Logo */}
+        <Link href="/" className="text-xl font-semibold">
+          ⚡ EV Locate
+        </Link>
+
+        {/* Desktop Links */}
+        <div className="hidden md:flex items-center gap-8 text-lg">
+          <NavLinks />
+        </div>
+
+        {/* Desktop Auth */}
+        <div className="hidden md:flex items-center gap-6 text-lg">
+          <AuthLinks />
+        </div>
+
+        {/* Mobile Menu Icon */}
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="md:hidden text-3xl"
         >
-          Repo
-        </a>
-      </div>
+          <FiMenu />
+        </button>
+      </nav>
 
-      {/* Right — Auth controls */}
-      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        {!user && (
-          <>
-            <Link
-              href="/login"
-              style={{ color: "white", textDecoration: "none", fontSize: "16px" }}
-            >
-              Login
-            </Link>
-          </>
-        )}
+      {/* Mobile Menu Overlay */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 bg-black text-white flex flex-col gap-8 items-center justify-center text-2xl">
+          {/* Close btn */}
+          <button
+            onClick={() => setMobileOpen(false)}
+            className="absolute top-5 right-5 text-4xl"
+          >
+            <FiX />
+          </button>
 
-        {user && (
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            {/* Google profile avatar */}
-            {user.user_metadata?.avatar_url && (
-              <img
-                src={user.user_metadata.avatar_url}
-                alt="profile"
-                style={{
-                  width: "36px",
-                  height: "36px",
-                  borderRadius: "50%",
-                  border: "2px solid white",
-                }}
-              />
-            )}
-            <span style={{ fontSize: "15px" }}>
-              {user.user_metadata?.full_name || user.email}
-            </span>
+          {/* Nav links */}
+          <NavLinks />
 
-            <button
-              onClick={handleLogout}
-              style={{
-                background: "transparent",
-                border: "1px solid white",
-                borderRadius: "18px",
-                padding: "4px 10px",
-                fontSize: "14px",
-                cursor: "pointer",
-                color: "white",
-              }}
-            >
-              Logout
-            </button>
-          </div>
-        )}
-      </div>
-    </nav>
+          {/* Auth */}
+          <AuthLinks />
+        </div>
+      )}
+    </>
   );
 }
 
